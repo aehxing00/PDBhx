@@ -1,4 +1,4 @@
-"""LigPlot-CN 图形界面（中文 UI，英文图注）。
+"""PDBhx 图形界面（中文 UI，英文图注）。
 
 界面：深绿顶栏 + 卡片式侧栏 + 主图/定量图切换 + KPI 指标条 + 数据面板。
 """
@@ -125,7 +125,7 @@ class ChineseToolbar(NavigationToolbar2Tk):
         return
 
 
-class LigPlotApp:
+class PDBhxApp:
     def __init__(self, root: tk.Tk):
         self.root = root
         try:
@@ -272,7 +272,7 @@ class LigPlotApp:
                          command=self._refit_preview)
         menu.add_separator()
         menu.add_command(label="使用说明", command=self._show_help)
-        menu.add_command(label="关于 LigPlot-CN", command=self._show_about)
+        menu.add_command(label="关于 PDBhx", command=self._show_about)
         menu.add_separator()
         menu.add_command(label="退出", command=self.root.destroy)
         self.more_menu = menu
@@ -285,7 +285,7 @@ class LigPlotApp:
         self.root.bind("<Control-0>", lambda e: self._refit_preview())
 
     def _build_layout(self):
-        self.root.title(f"LigPlot-CN {__version__}  ·  蛋白相互作用可视化与定量分析")
+        self.root.title(f"PDBhx {__version__}  ·  蛋白相互作用可视化与定量分析")
         self.root.geometry("1480x940")
         self.root.minsize(1180, 800)
         self.root.configure(background=BG)
@@ -298,7 +298,7 @@ class LigPlotApp:
         self.status_var = tk.StringVar(value="")
         tk.Label(status, textvariable=self.status_var, bg="#E3EBE5", fg="#4E6055",
                  font=(UI_FONT, 8), anchor="w").pack(side="left", padx=12)
-        tk.Label(status, text=f"LigPlot-CN {__version__}  ·  PDB / mmCIF  ·  600 dpi export",
+        tk.Label(status, text=f"PDBhx {__version__}  ·  PDB / mmCIF  ·  600 dpi export",
                  bg="#E3EBE5", fg="#7A8A80", font=(UI_FONT, 8)).pack(
             side="right", padx=12)
 
@@ -338,7 +338,7 @@ class LigPlotApp:
 
         title_box = tk.Frame(header, bg=PRIMARY_DARK)
         title_box.pack(side="left", pady=10)
-        tk.Label(title_box, text="LigPlot-CN", bg=PRIMARY_DARK, fg="white",
+        tk.Label(title_box, text="PDBhx", bg=PRIMARY_DARK, fg="white",
                  font=(UI_FONT, 15, "bold")).pack(anchor="w")
         tk.Label(title_box, text="蛋白相互作用可视化与定量分析 · Protein interaction atlas",
                  bg=PRIMARY_DARK, fg=MINT, font=(UI_FONT, 8)).pack(anchor="w")
@@ -1406,8 +1406,11 @@ class LigPlotApp:
 
     def _show_about(self):
         text = (
-            f"LigPlot-CN {__version__}\n\n"
-            "参考 LigPlot+ 的表达方式、独立实现的蛋白相互作用可视化与定量分析工具。\n\n"
+            f"PDBhx {__version__}\n"
+            "蛋白–小分子 / 蛋白–蛋白相互作用可视化与定量分析\n\n"
+            "作者：aehxing\n"
+            "联系方式：aehxing@163.com\n"
+            "项目主页：https://github.com/aehxing00/PDBhx\n\n"
             "功能：\n"
             "• 蛋白–小分子 / 蛋白–蛋白两种模式\n"
             "• 氢键、疏水、盐桥、π–π、金属配位\n"
@@ -1417,10 +1420,9 @@ class LigPlotApp:
             "• PDB / mmCIF（gzip）\n"
             "• PNG 600 dpi / PDF / SVG / CSV\n"
             "• 中文界面，英文图注\n\n"
-            "实现：Python 3 + NumPy + Matplotlib + Tkinter\n"
-            "本软件不包含 LigPlot+ 的任何源代码。"
+            "实现：Python 3 + NumPy + Matplotlib + Tkinter"
         )
-        self._show_text_dialog("关于 LigPlot-CN", text)
+        self._show_text_dialog("关于 PDBhx", text)
 
     def _show_text_dialog(self, title: str, text: str):
         win = tk.Toplevel(self.root)
@@ -1445,7 +1447,7 @@ class LigPlotApp:
 def main():
     _enable_dpi_awareness()
     root = tk.Tk()
-    app = LigPlotApp(root)
+    app = PDBhxApp(root)
     try:
         root.state("zoomed")
     except tk.TclError:

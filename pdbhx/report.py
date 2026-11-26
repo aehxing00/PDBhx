@@ -185,7 +185,7 @@ class InteractionReport:
         self.styles = _styles()
         self.assessment: PLAssessment | PPAssessment | None = None
         self.fig_paths: dict[str, str] = {}
-        self.tmpdir = tempfile.TemporaryDirectory(prefix="ligplotcn_report_")
+        self.tmpdir = tempfile.TemporaryDirectory(prefix="pdbhx_report_")
         self.date = datetime.date.today().strftime("%Y-%m-%d")
         self.is_pl = isinstance(result, PLResult)
 
@@ -491,19 +491,19 @@ class InteractionReport:
                  "The fingerprint enables rapid identification of residues that combine multiple "
                  "interaction types versus those with a single dominant type."),
                 ("composition", "结合口袋组成与配体属性",
-                 "A：结合口袋与全部蛋白背景的残基类别组成比较；B：配体观测分子式、质量、环数、"
+                 "左图：结合口袋与全部蛋白背景的残基类别组成比较；右图：配体观测分子式、质量、环数、"
                  "可旋转键、供体/受体、形式电荷、埋藏比例与 BSA。",
-                 "A: residue-class composition of the pocket versus the whole-protein background. "
-                 "B: ligand formula, observed mass, ring count, rotatable bonds, donor/acceptor "
+                 "Left: residue-class composition of the pocket versus the whole-protein background. "
+                 "Right: ligand formula, observed mass, ring count, rotatable bonds, donor/acceptor "
                  "counts, formal charge, burial fraction and BSA.",
                  f"口袋残基类别：{self._class_summary(a.pocket_composition, 'cn')}；"
                  f"配体埋藏比例为 {100 * a.descriptors.burial_fraction:.1f}%。",
                  f"Pocket residue classes: {self._class_summary(a.pocket_composition, 'en')}; "
                  f"ligand burial is {100 * a.descriptors.burial_fraction:.1f}%."),
                 ("bsa", "埋藏表面积（BSA）分析",
-                 "A：每个残基对结合埋藏的贡献（Å²）；B：半和 BSA、总埋藏面积、蛋白/配体各自埋藏面积与"
+                 "左图：每个残基对结合埋藏的贡献（Å²）；右图：半和 BSA、总埋藏面积、蛋白/配体各自埋藏面积与"
                  "配体埋藏比例。SASA 采用 Shrake–Rupley 方法、1.4 Å 探针。",
-                 "A: per-residue contribution to the buried surface (Å²). B: half-sum BSA, total "
+                 "Left: per-residue contribution to the buried surface (Å²). Right: half-sum BSA, total "
                  "buried area, protein/ligand buried contributions and ligand burial fraction. "
                  "SASA was computed with the Shrake–Rupley method and a 1.4 Å probe.",
                  f"半和 BSA 为 {a.bsa:.1f} Å²，总埋藏 {a.total_buried:.1f} Å²；"
@@ -511,19 +511,19 @@ class InteractionReport:
                  f"The half-sum BSA is {a.bsa:.1f} Å² and the total buried surface is "
                  f"{a.total_buried:.1f} Å²; the ligand buries {a.descriptors.buried_area:.1f} Å²."),
                 ("geometry", "相互作用几何与疏水接触统计",
-                 "A：氢键供体–受体距离与 D–H···A 角度散点图，虚线为 3.5 Å 与 120° 参考线；"
-                 "B：各残基的疏水原子对接触数与最小距离。",
-                 "A: donor–acceptor distance versus D–H···A angle for hydrogen bonds, with 3.5 Å "
-                 "and 120° reference lines. B: hydrophobic atom-pair contact counts and minimum "
+                 "左图：氢键供体–受体距离与 D–H···A 角度散点图，虚线为 3.5 Å 与 120° 参考线；"
+                 "右图：各残基的疏水原子对接触数与最小距离。",
+                 "Left: donor–acceptor distance versus D–H···A angle for hydrogen bonds, with 3.5 Å "
+                 "and 120° reference lines. Right: hydrophobic atom-pair contact counts and minimum "
                  "distances per residue.",
                  "该图用于检查氢键几何是否处于常见范围，并量化疏水接触的多重性。",
                  "This figure checks whether hydrogen-bond geometry falls within common ranges and "
                  "quantifies the multiplicity of hydrophobic contacts."),
                 ("contact", "配体逐原子埋藏与元素组成",
-                 "A：每个配体原子的埋藏 SASA 及埋藏比例，圆点标记参与极性相互作用的原子；"
-                 "B：配体重原子的元素组成。",
-                 "A: buried SASA and burial fraction for each ligand atom; dots mark atoms involved "
-                 "in polar interactions. B: element composition of ligand heavy atoms.",
+                 "左图：每个配体原子的埋藏 SASA 及埋藏比例，圆点标记参与极性相互作用的原子；"
+                 "右图：配体重原子的元素组成。",
+                 "Left: buried SASA and burial fraction for each ligand atom; dots mark atoms involved "
+                 "in polar interactions. Right: element composition of ligand heavy atoms.",
                  "逐原子埋藏图可定位深埋于口袋的疏水骨架与暴露的极性基团。",
                  "The per-atom burial profile locates deeply buried hydrophobic scaffolds and more "
                  "exposed polar groups."),
@@ -580,11 +580,11 @@ class InteractionReport:
                  "alone. Records inside the shaded region have more typical geometry, whereas outliers "
                  "should be interpreted together with the local environment."),
                 ("diststats", "相互作用距离统计",
-                 "A：五类相互作用距离的箱线与逐记录散点，箱体为四分位距、粗线为中位数、须为范围；"
-                 "B：累积分布，可读取任一类在给定距离阈值内包含的记录比例。",
-                 "A: box-and-scatter summary of distances for the five interaction classes; boxes span "
+                 "左图：五类相互作用距离的箱线与逐记录散点，箱体为四分位距、粗线为中位数、须为范围；"
+                 "右图：累积分布，可读取任一类在给定距离阈值内包含的记录比例。",
+                 "Left: box-and-scatter summary of distances for the five interaction classes; boxes span "
                  "the interquartile range, thick lines mark medians and whiskers span the full range. "
-                 "B: cumulative distributions giving the fraction of records within any distance cutoff.",
+                 "Right: cumulative distributions giving the fraction of records within any distance cutoff.",
                  "距离统计给出各类作用的尺度与离散度；累积曲线便于在统一阈值下比较不同作用的包含比例。",
                  "The statistics summarize the scale and spread of each interaction class, and the "
                  "cumulative curves allow the fraction of records within a common cutoff to be compared."),
@@ -641,26 +641,26 @@ class InteractionReport:
                  "This view highlights multivalent residues that simultaneously contribute "
                  "hydrogen bonds, salt bridges and hydrophobic contacts."),
                 ("composition", "界面残基组成与埋藏平衡",
-                 "A：界面与全部蛋白背景的残基类别组成比较；B：两侧链的埋藏面积、总埋藏、BSA 与界面大小分类。",
-                 "A: residue-class composition of the interface versus the protein background. "
-                 "B: buried area per chain, total buried surface, half-sum BSA and interface-size "
+                 "左图：界面与全部蛋白背景的残基类别组成比较；右图：两侧链的埋藏面积、总埋藏、BSA 与界面大小分类。",
+                 "Left: residue-class composition of the interface versus the protein background. "
+                 "Right: buried area per chain, total buried surface, half-sum BSA and interface-size "
                  "classification.",
                  f"界面总埋藏 {a.total_buried:.1f} Å²，半和 BSA {a.bsa:.1f} Å²，"
                  f"属于 {a.interface_size_class} 界面。",
                  f"Total buried surface {a.total_buried:.1f} Å²; half-sum BSA {a.bsa:.1f} Å²; "
                  f"{a.interface_size_class} interface."),
                 ("bsa", "界面埋藏表面积（BSA）分析",
-                 "A：每个界面残基的埋藏贡献；B：两侧链的埋藏面积平衡、总埋藏与界面大小分类。"
+                 "左图：每个界面残基的埋藏贡献；右图：两侧链的埋藏面积平衡、总埋藏与界面大小分类。"
                  "SASA 采用 Shrake–Rupley、1.4 Å 探针。",
-                 "A: per-residue buried-surface contribution. B: balance of burial between the two "
+                 "Left: per-residue buried-surface contribution. Right: balance of burial between the two "
                  "chains, total buried surface and interface-size classification. SASA used "
                  "Shrake–Rupley with a 1.4 Å probe.",
                  "两侧埋藏较均衡，说明界面为双向互补而非单侧插入。",
                  "The balanced burial on both sides indicates a two-sided complementary interface "
                  "rather than a one-sided insertion."),
                 ("geometry", "相互作用几何与疏水接触统计",
-                 "A：氢键距离–角度散点图；B：各残基疏水原子对接触数与最小距离。",
-                 "A: hydrogen-bond distance–angle scatter. B: hydrophobic atom-pair contacts and "
+                 "左图：氢键距离–角度散点图；右图：各残基疏水原子对接触数与最小距离。",
+                 "Left: hydrogen-bond distance–angle scatter. Right: hydrophobic atom-pair contacts and "
                  "minimum distances per residue.",
                  "用于检查界面氢键几何与疏水接触的多重性。",
                  "The figure examines hydrogen-bond geometry and the multiplicity of hydrophobic "
@@ -721,9 +721,9 @@ class InteractionReport:
                  "The figure checks whether interface hydrogen bonds adopt typical geometry; records "
                  "outside the favourable region may indicate weaker polar contacts or geometric strain."),
                 ("diststats", "相互作用距离统计",
-                 "A：五类作用距离的箱线与逐记录散点；B：累积分布。箱体为四分位距、粗线为中位数、须为范围。",
-                 "A: box-and-scatter summaries of distances for the five interaction classes. "
-                 "B: cumulative distributions. Boxes span the interquartile range, thick lines mark "
+                 "左图：五类作用距离的箱线与逐记录散点；右图：累积分布。箱体为四分位距、粗线为中位数、须为范围。",
+                 "Left: box-and-scatter summaries of distances for the five interaction classes. "
+                 "Right: cumulative distributions. Boxes span the interquartile range, thick lines mark "
                  "medians and whiskers span the full range.",
                  "该图给出界面各类作用的距离尺度与离散度，并可在统一阈值下比较包含比例。",
                  "The figure reports the distance scale and spread of each interface interaction "
@@ -854,11 +854,11 @@ class InteractionReport:
                     "right bar shows total records per residue. Zero counts are shown as dots.",
                 ),
                 "composition": (
-                    "A 图百分比以各自残基集合为分母；B 图质量为结构文件中实际建模原子的观测质量，"
+                    "左图百分比以各自残基集合为分母；右图质量为结构文件中实际建模原子的观测质量，"
                     "若氢未建模则为重原子观测质量。",
-                    "In A, percentages are calculated within each residue set. In B, mass is the "
-                    "observed mass of modelled atoms; if hydrogens are absent, it is a heavy-atom "
-                    "observed mass.",
+                    "In the left panel, percentages are calculated within each residue set. In the right "
+                    "panel, mass is the observed mass of modelled atoms; if hydrogens are absent, it is "
+                    "a heavy-atom observed mass.",
                 ),
                 "bsa": (
                     "半和 BSA 为两侧埋藏面积之和的一半；总埋藏面积为两侧埋藏之和。"
@@ -875,9 +875,9 @@ class InteractionReport:
                 ),
                 "contact": (
                     "逐原子埋藏比例 = 埋藏 SASA / 自由原子 SASA；圆点标记参与极性相互作用的原子。"
-                    "B 图给出配体重原子的元素组成。",
+                    "右图给出配体重原子的元素组成。",
                     "Per-atom burial fraction = buried SASA / free-atom SASA; dots mark atoms in "
-                    "polar interactions. Panel B shows the element composition of heavy atoms.",
+                    "polar interactions. The right panel shows the element composition of heavy atoms.",
                 ),
                 "hotspot": (
                     "x 轴为逐残基埋藏面积，y 轴为记录数；气泡面积为疏水原子对接触数；"
@@ -915,10 +915,10 @@ class InteractionReport:
                 ),
                 "diststats": (
                     "箱体为四分位距，粗线为中位数，水平须为最小–最大范围；散点为单条记录。"
-                    "B 图在统一距离阈值下可直接读取累计比例。",
+                    "右图在统一距离阈值下可直接读取累计比例。",
                     "Boxes span the interquartile range, thick lines are medians and horizontal "
-                    "whiskers span the minimum–maximum range; points are individual records. Panel B "
-                    "gives cumulative fractions at any common distance cutoff.",
+                    "whiskers span the minimum–maximum range; points are individual records. The right "
+                    "panel gives cumulative fractions at any common distance cutoff.",
                 ),
                 "ligandmap": (
                     "投影为配体主平面二维视图，颜色仅表示埋藏比例，不表示原子类型；"
@@ -957,9 +957,10 @@ class InteractionReport:
                     "right bar shows total records per residue. Zero counts are shown as dots.",
                 ),
                 "composition": (
-                    "A 图百分比以各自残基集合为分母；B 图给出两侧链的埋藏面积、总埋藏、半和 BSA 与界面大小分类。",
-                    "In A, percentages are calculated within each residue set. B shows buried area "
-                    "per chain, total buried surface, half-sum BSA and interface-size class.",
+                    "左图百分比以各自残基集合为分母；右图给出两侧链的埋藏面积、总埋藏、半和 BSA 与界面大小分类。",
+                    "In the left panel, percentages are calculated within each residue set. The right "
+                    "panel shows buried area per chain, total buried surface, half-sum BSA and "
+                    "interface-size class.",
                 ),
                 "bsa": (
                     "半和 BSA 为两侧埋藏面积之和的一半；总埋藏面积为两侧埋藏之和。"
@@ -1168,13 +1169,13 @@ class InteractionReport:
     def _tables_story(self) -> list:
         story = self._section("关键相互作用", "Key Interactions")
         story.append(_p(
-            escape("下表列出按类型与距离排序的前 20 条相互作用记录；完整数据可通过 LigPlot-CN "
+            escape("下表列出按类型与距离排序的前 20 条相互作用记录；完整数据可通过 PDBhx "
                    "导出 CSV 获取。原子对列中“—”表示该作用按残基对合并统计。"),
             self.styles["body_cn"],
         ))
         story.append(_p(
             escape("The table lists the top 20 records sorted by interaction type and distance. "
-                   "The complete dataset can be exported as CSV from LigPlot-CN. An em dash in "
+                   "The complete dataset can be exported as CSV from PDBhx. An em dash in "
                    "the atom-pair column indicates residue-level aggregation."),
             self.styles["body_en"],
         ))
@@ -1348,10 +1349,6 @@ class InteractionReport:
 
         story += self._section("参考", "References")
         refs = [
-            "Wallace AC, Laskowski RA, Thornton JM. LIGPLOT: a program to generate schematic "
-            "diagrams of protein–ligand interactions. Protein Engineering. 1995;8:127–134.",
-            "Laskowski RA, Swindells MB. LigPlot+: multiple ligand–protein interaction diagrams "
-            "for drug discovery. Journal of Chemical Information and Modeling. 2011;51:2778–2786.",
             "Salentin S, Schreiber S, Haupt VJ, Adasme MF, Schroeder M. PLIP: fully automated "
             "protein–ligand interaction profiler. Nucleic Acids Research. 2015;43:W443–W447.",
             "Shrake A, Rupley JA. Environment and exposure to solvent of protein atoms. "
@@ -1377,7 +1374,7 @@ class InteractionReport:
 
         canvas.setFillColor(colors.HexColor("#A9C9B7"))
         canvas.setFont(FONT_ENB, 9.5)
-        canvas.drawString(MARGIN_L, PAGE_H - 17 * mm, "LIGPLOT-CN")
+        canvas.drawString(MARGIN_L, PAGE_H - 17 * mm, "PDBHX")
         canvas.setFont(FONT_CN, 7.2)
         canvas.drawString(MARGIN_L, PAGE_H - 22 * mm,
                           "STRUCTURAL INTERACTION REPORT  ·  结构互作分析报告")
@@ -1450,6 +1447,9 @@ class InteractionReport:
         canvas.setFont(FONT_EN, 6.6)
         canvas.drawString(MARGIN_L, 32 * mm,
                           "Fifteen publication-quality figures with bilingual Chinese/English captions.")
+        canvas.setFont(FONT_CN, 7.2)
+        canvas.drawString(MARGIN_L, 24 * mm,
+                          "作者 aehxing  ·  联系方式 aehxing@163.com  ·  https://github.com/aehxing00/PDBhx")
 
         canvas.setStrokeColor(BORDER)
         canvas.setLineWidth(0.6)
@@ -1457,7 +1457,7 @@ class InteractionReport:
         canvas.setFillColor(MUTED)
         canvas.setFont(FONT_EN, 7.0)
         canvas.drawString(MARGIN_L, 11 * mm,
-                          f"Generated by LigPlot-CN v{__version__}  ·  {self.date}")
+                          f"Generated by PDBhx v{__version__}  ·  {self.date}")
         canvas.drawRightString(PAGE_W - MARGIN_R, 11 * mm,
                                "Structural Interaction Report")
         canvas.restoreState()
@@ -1470,7 +1470,7 @@ class InteractionReport:
         canvas.setFillColor(MUTED)
         canvas.setFont(FONT_EN, 6.8)
         canvas.drawString(MARGIN_L, PAGE_H - 12 * mm,
-                          "LigPlot-CN  ·  Structural Interaction Report")
+                          "PDBhx  ·  Structural Interaction Report")
         canvas.drawRightString(PAGE_W - MARGIN_R, PAGE_H - 12 * mm,
                                f"PDB {self.result.structure.pdb_id}  ·  {self._entity()}")
 
@@ -1478,7 +1478,7 @@ class InteractionReport:
         canvas.line(MARGIN_L, 15 * mm, PAGE_W - MARGIN_R, 15 * mm)
         canvas.setFont(FONT_EN, 6.8)
         canvas.drawString(MARGIN_L, 10 * mm,
-                          f"Generated {self.date}  ·  LigPlot-CN v{__version__}")
+                          f"Generated {self.date}  ·  PDBhx v{__version__}")
         canvas.drawRightString(PAGE_W - MARGIN_R, 10 * mm, str(canvas.getPageNumber()))
         canvas.restoreState()
 
@@ -1490,14 +1490,14 @@ class InteractionReport:
         canvas.setFillColor(MUTED)
         canvas.setFont(FONT_EN, 6.8)
         canvas.drawString(MARGIN_L, PAGE_H_L - 12 * mm,
-                          "LigPlot-CN  ·  Structural Interaction Report")
+                          "PDBhx  ·  Structural Interaction Report")
         canvas.drawRightString(PAGE_W_L - MARGIN_R, PAGE_H_L - 12 * mm,
                                f"PDB {self.result.structure.pdb_id}  ·  {self._entity()}")
         canvas.setStrokeColor(BORDER)
         canvas.line(MARGIN_L, 14 * mm, PAGE_W_L - MARGIN_R, 14 * mm)
         canvas.setFont(FONT_EN, 6.8)
         canvas.drawString(MARGIN_L, 9 * mm,
-                          f"Generated {self.date}  ·  LigPlot-CN v{__version__}")
+                          f"Generated {self.date}  ·  PDBhx v{__version__}")
         canvas.drawRightString(PAGE_W_L - MARGIN_R, 9 * mm, str(canvas.getPageNumber()))
         canvas.restoreState()
 
@@ -1506,9 +1506,9 @@ class InteractionReport:
             self.output_path, pagesize=A4,
             leftMargin=MARGIN_L, rightMargin=MARGIN_R,
             topMargin=MARGIN_T, bottomMargin=MARGIN_B,
-            title=f"LigPlot-CN Interaction Report — {self.result.structure.pdb_id}",
-            author="LigPlot-CN", subject="Protein interaction analysis report",
-            creator=f"LigPlot-CN v{__version__}",
+            title=f"PDBhx Interaction Report — {self.result.structure.pdb_id}",
+            author="aehxing", subject="Protein interaction analysis report",
+            creator=f"PDBhx v{__version__}",
         )
         cover_frame = Frame(0, 0, PAGE_W, PAGE_H, id="cover",
                             leftPadding=0, rightPadding=0,

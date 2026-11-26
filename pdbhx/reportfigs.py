@@ -68,9 +68,7 @@ def _titles(fig, title: str, subtitle: str, scale: float):
              color=MUTED, family=FONT)
 
 
-def _panel(ax, letter: str, title: str, scale: float):
-    ax.text(-0.02, 1.06, letter, transform=ax.transAxes, ha="right", va="top",
-            fontsize=11.5 * scale * BOOST, fontweight="bold", color=INK, family=FONT)
+def _panel(ax, title: str, scale: float):
     ax.set_title(title, loc="left", fontsize=9.4 * scale * BOOST, fontweight="bold",
                  color=INK, family=FONT, pad=8)
 
@@ -166,7 +164,7 @@ def build_fingerprint_figure(result: PLResult | PPResult, scale: float = 1.0,
     ax1.tick_params(axis="y", length=0, pad=4)
     for spine in ax1.spines.values():
         spine.set_visible(False)
-    _panel(ax1, "A", "Residue × interaction-type fingerprint", scale)
+    _panel(ax1, "Residue × interaction-type fingerprint", scale)
 
     colors = [TYPE_COLORS[_dominant({k: s[k] for k in TYPE_ORDER})] for s in stats]
     ax2.barh(np.arange(n), totals, color=colors, height=0.62, edgecolor="white",
@@ -180,7 +178,7 @@ def build_fingerprint_figure(result: PLResult | PPResult, scale: float = 1.0,
     ax2.set_xlabel("Total", fontsize=7.4 * scale * BOOST, color=MUTED, family=FONT)
     ax2.tick_params(axis="y", left=False, labelleft=False)
     _clean_axes(ax2, scale)
-    _panel(ax2, "B", "Total records", scale)
+    _panel(ax2, "Total records", scale)
 
     _titles(fig, "Interaction Fingerprint",
             f"PDB {result.structure.pdb_id}   ·   {len(stats)} residues   ·   "
@@ -237,7 +235,7 @@ def build_composition_figure(result: PLResult | PPResult,
                    color=MUTED, family=FONT)
     ax1.legend(frameon=False, fontsize=7.0 * scale * BOOST, loc="lower right")
     _clean_axes(ax1, scale)
-    _panel(ax1, "A", "Residue class composition", scale)
+    _panel(ax1, "Residue class composition", scale)
 
     ax2.set_xlim(0, 1)
     ax2.set_ylim(0, 1)
@@ -245,7 +243,7 @@ def build_composition_figure(result: PLResult | PPResult,
     ax2.add_patch(Rectangle((0, 0), 1, 1, transform=ax2.transAxes,
                             facecolor=SOFT, edgecolor=BORDER,
                             linewidth=0.7 * scale))
-    _panel(ax2, "B", "Binding profile", scale)
+    _panel(ax2, "Binding profile", scale)
     if isinstance(result, PLResult):
         d = assessment.descriptors
         rows = [
@@ -315,7 +313,7 @@ def build_composition_figure(result: PLResult | PPResult,
                  transform=ax2.transAxes, fontsize=7.0 * scale * BOOST,
                  color=MUTED, family=FONT)
         ax2.text(0.06, 0.08,
-                 "Class composition is shown in panel A.",
+                 "Class composition is shown in the left panel.",
                  transform=ax2.transAxes, fontsize=6.6 * scale * BOOST,
                  color="#8C9A92", family=FONT)
 
@@ -369,7 +367,7 @@ def build_bsa_figure(result: PLResult | PPResult,
         ax1.axis("off")
         ax1.text(0.5, 0.5, "No significant per-residue burial", ha="center",
                  va="center", color=MUTED, family=FONT, fontsize=9 * scale * BOOST)
-        _panel(ax1, "A", "Per-residue burial", scale)
+        _panel(ax1, "Per-residue burial", scale)
         _titles(fig, "Buried Surface Area (BSA) Analysis", subtitle, scale)
         return fig
 
@@ -388,7 +386,7 @@ def build_bsa_figure(result: PLResult | PPResult,
     ax1.set_xlabel("Buried surface area per residue (Å²)", fontsize=7.6 * scale * BOOST,
                    color=MUTED, family=FONT)
     _clean_axes(ax1, scale)
-    _panel(ax1, "A", "Per-residue burial", scale)
+    _panel(ax1, "Per-residue burial", scale)
 
     ax2.set_xlim(0, 1)
     ax2.set_ylim(0, 1)
@@ -396,7 +394,7 @@ def build_bsa_figure(result: PLResult | PPResult,
     ax2.add_patch(Rectangle((0, 0), 1, 1, transform=ax2.transAxes,
                             facecolor=SOFT, edgecolor=BORDER,
                             linewidth=0.7 * scale))
-    _panel(ax2, "B", "Surface area balance", scale)
+    _panel(ax2, "Surface area balance", scale)
     if isinstance(result, PLResult):
         d = assessment.descriptors
         ax2.text(0.06, 0.82, "Binding buried surface", transform=ax2.transAxes,
@@ -523,7 +521,7 @@ def build_geometry_figure(result: PLResult | PPResult, scale: float = 1.0,
         ax1.axis("off")
         ax1.text(0.5, 0.5, "No hydrogen bonds detected", ha="center",
                  color=MUTED, family=FONT, fontsize=9 * scale * BOOST)
-    _panel(ax1, "A", "Hydrogen-bond geometry", scale)
+    _panel(ax1, "Hydrogen-bond geometry", scale)
 
     if hydrophobic:
         per_res = {}
@@ -561,7 +559,7 @@ def build_geometry_figure(result: PLResult | PPResult, scale: float = 1.0,
         ax2.axis("off")
         ax2.text(0.5, 0.5, "No hydrophobic contacts detected", ha="center",
                  color=MUTED, family=FONT, fontsize=9 * scale * BOOST)
-    _panel(ax2, "B", "Hydrophobic contact multiplicity", scale)
+    _panel(ax2, "Hydrophobic contact multiplicity", scale)
 
     _titles(fig, "Interaction Geometry and Contact Statistics",
             f"PDB {result.structure.pdb_id}   ·   "
@@ -637,7 +635,7 @@ def _ligand_burial_figure(result: PLResult, assessment: PLAssessment,
     ax1.set_xlabel("Buried SASA per ligand atom (Å²)", fontsize=7.6 * scale * BOOST,
                    color=MUTED, family=FONT)
     _clean_axes(ax1, scale)
-    _panel(ax1, "A", "Ligand atom burial profile", scale)
+    _panel(ax1, "Ligand atom burial profile", scale)
 
     elements = {}
     for atom in atoms:
@@ -659,7 +657,7 @@ def _ligand_burial_figure(result: PLResult, assessment: PLAssessment,
     ax2.legend(wedges, [f"{el}  {v}" for el, v in zip(order, values)],
                loc="upper center", bbox_to_anchor=(0.5, -0.02), ncol=2,
                frameon=False, fontsize=6.2 * scale * BOOST)
-    _panel(ax2, "B", "Ligand element composition", scale)
+    _panel(ax2, "Ligand element composition", scale)
 
     _titles(fig, "Ligand Burial and Composition",
             f"PDB {result.structure.pdb_id}   ·   ligand {ligand.resname}   ·   "
@@ -733,7 +731,7 @@ def _contact_matrix_figure(result: PPResult, scale: float, dpi: float) -> Figure
     ax.spines["left"].set_color(GRID)
     ax.spines["bottom"].set_color(GRID)
     ax.tick_params(colors=MUTED, length=0)
-    _panel(ax, "A", "Residue–residue interaction matrix", scale)
+    _panel(ax, "Residue–residue interaction matrix", scale)
 
     present = [k for k in TYPE_ORDER if any(p[3] == k for p in points)]
     handles = [Patch(facecolor=TYPE_COLORS[k], edgecolor="none",
@@ -958,7 +956,7 @@ def build_hotspot_figure(result: PLResult | PPResult,
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     _clean_axes(ax, scale)
     ax.grid(axis="y", color=GRID, linewidth=0.6 * scale)
-    _panel(ax, "A", "Hotspot landscape", scale)
+    _panel(ax, "Hotspot landscape", scale)
 
     if isinstance(result, PLResult):
         present = [c for c in CLASS_ORDER
@@ -1020,7 +1018,7 @@ def build_enrichment_figure(result: PLResult | PPResult,
                   fontsize=8.0 * scale * BOOST, color=MUTED, family=FONT)
     ax.xaxis.set_major_locator(MaxNLocator(5))
     _clean_axes(ax, scale)
-    _panel(ax, "A", f"{label} residue-class enrichment", scale)
+    _panel(ax, f"{label} residue-class enrichment", scale)
     fig.text(0.985, 0.03,
              "Percentage-point differences are descriptive; small counts should be interpreted cautiously.",
              ha="right", va="bottom", fontsize=6.4 * scale * BOOST,
@@ -1221,7 +1219,7 @@ def build_type_class_figure(result: PLResult | PPResult,
         spine.set_visible(False)
     ax.set_xlabel("Interaction type", fontsize=8.2 * scale * BOOST,
                   color=MUTED, family=FONT)
-    _panel(ax, "A", "Interaction type × residue class", scale)
+    _panel(ax, "Interaction type × residue class", scale)
 
     totals = mat.sum(axis=1)
     ax2.barh(np.arange(mat.shape[0]), totals,
@@ -1235,8 +1233,6 @@ def build_type_class_figure(result: PLResult | PPResult,
                    color=MUTED, family=FONT)
     ax2.tick_params(axis="y", left=False, labelleft=False)
     _clean_axes(ax2, scale)
-    ax2.text(-0.16, 1.06, "B", transform=ax2.transAxes, ha="right", va="top",
-             fontsize=11.5 * scale * BOOST, fontweight="bold", color=INK, family=FONT)
     ax2.set_title("Total involvements", loc="left", fontsize=9.4 * scale * BOOST,
                   fontweight="bold", color=INK, family=FONT, pad=8)
     note = ("Each interaction can involve two residues in protein–protein mode; "
@@ -1374,7 +1370,7 @@ def build_distance_stats_figure(result: PLResult | PPResult, scale: float = 1.0,
     ax1.set_xlim(left=2.3)
     _clean_axes(ax1, scale)
     ax1.grid(axis="x", color=GRID, linewidth=0.6 * scale)
-    _panel(ax1, "A", "Distance distributions", scale)
+    _panel(ax1, "Distance distributions", scale)
 
     for kind in present:
         vals = np.sort(data[kind])
@@ -1394,7 +1390,7 @@ def build_distance_stats_figure(result: PLResult | PPResult, scale: float = 1.0,
                handlelength=1.2, columnspacing=1.2)
     _clean_axes(ax2, scale)
     ax2.grid(axis="y", color=GRID, linewidth=0.6 * scale)
-    _panel(ax2, "B", "Cumulative distance distributions", scale)
+    _panel(ax2, "Cumulative distance distributions", scale)
     _titles(fig, "Interaction Distance Statistics",
             f"PDB {result.structure.pdb_id}   ·   {len(result.interactions)} interaction records", scale)
     return fig
@@ -1512,7 +1508,7 @@ def build_pair_type_figure(result: PPResult, scale: float = 1.0,
     ax.tick_params(axis="both", length=0)
     for spine in ax.spines.values():
         spine.set_visible(False)
-    _panel(ax, "A", "Residue-pair × interaction type", scale)
+    _panel(ax, "Residue-pair × interaction type", scale)
     totals = mat.sum(axis=1)
     ax2.barh(np.arange(len(items)), totals, color="#7FB591", height=0.62,
              edgecolor="white", linewidth=0.5 * scale)
@@ -1523,7 +1519,7 @@ def build_pair_type_figure(result: PPResult, scale: float = 1.0,
     ax2.set_xlabel("Records", fontsize=7.6 * scale * BOOST, color=MUTED, family=FONT)
     ax2.tick_params(axis="y", left=False, labelleft=False)
     _clean_axes(ax2, scale)
-    _panel(ax2, "B", "Pair totals", scale)
+    _panel(ax2, "Pair totals", scale)
     _titles(fig, "Residue-Pair Interaction Composition",
             f"PDB {result.structure.pdb_id}   ·   chains "
             f"{result.chain_a.strip()}/{result.chain_b.strip()}", scale)
